@@ -49,8 +49,17 @@
                     <p class="text-gray-500 mt-2">We'd love to hear from you!</p>
                 </div>
 
-                <!-- Form -->
-                <form id="contactForm" novalidate>
+                <!-- 
+                  The form now has 'action', 'method', and 'target' attributes.
+                  - 'action' points to your webhook URL.
+                  - 'method' is 'POST'.
+                  - 'target' points to the hidden iframe below to prevent page reload.
+                -->
+                <form id="contactForm" 
+                      action="https://active-specially-thrush.ngrok-free.app/webhook-test/b14800ba-c928-4a58-ac3f-a24ba0d4f44e" 
+                      method="POST" 
+                      target="form-submission-iframe" 
+                      novalidate>
                     <!-- Name Input -->
                     <div class="mb-6">
                         <label for="name" class="block text-gray-700 text-sm font-bold mb-2">Name</label>
@@ -87,23 +96,20 @@
         </div>
     </div>
 
-    <script>
-        // --- Vanilla JavaScript for Form Handling with n8n Webhook ---
+    <!-- Hidden iframe to handle the form submission without navigating away -->
+    <iframe name="form-submission-iframe" style="display:none;"></iframe>
 
-        // Get the form and other elements
+    <script>
+        // --- JavaScript using standard form submission to an iframe ---
+
         const form = document.getElementById('contactForm');
         const statusMessage = document.getElementById('statusMessage');
         const submitButton = document.getElementById('submitButton');
 
-        // The n8n test webhook URL from your image
-        const webhookUrl = 'https://active-specially-thrush.ngrok-free.app/webhook-test/b14800ba-c928-4a58-ac3f-a24ba0d4f44e';
-
-        // Add a submit event listener to the form
-        form.addEventListener('submit', async function(event) {
-            // Prevent the default form submission behavior
+        form.addEventListener('submit', function(event) {
+            // We prevent the default submission to run our validation and UI updates first.
             event.preventDefault();
 
-            // Clear any previous status messages
             statusMessage.innerHTML = '';
             
             // --- 1. Form Validation ---
@@ -113,44 +119,32 @@
 
             if (name === '' || email === '' || message === '') {
                 displayMessage('Please fill out all fields.', 'text-red-600');
-                return; // Stop the function
+                return; // Stop the function if validation fails
             }
 
-            // --- 2. Show Loading State ---
-            submitButton.disabled = true;
-            submitButton.textContent = 'Sending...';
-
-            // --- 3. Prepare Data and Send to Webhook ---
-            const formData = {
-                name: name,
-                email: email,
-                message: message
-            };
-
+            // --- 2. Show UI feedback and submit the form ---
             try {
-                const response = await fetch(webhookUrl, {
-                    method: 'POST',
-                    // Add 'no-cors' mode to allow the cross-origin request
-                    mode: 'no-cors',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(formData),
-                });
-                
-                // Since we are in 'no-cors' mode, we cannot access the response.
-                // We will assume success if the fetch call doesn't throw an error.
+                // Submit the form programmatically. The browser will now send the data
+                // to the URL in the 'action' attribute, targeted at the hidden iframe.
+                form.submit();
+
+                // Show a success message to the user immediately.
                 displayMessage('Thank you! Your message has been sent.', 'text-green-600');
-                form.reset(); // Reset the form fields
+                
+                // Disable the button to prevent multiple submissions
+                submitButton.disabled = true;
+                submitButton.textContent = 'Sent!';
+
+                // Reset the form and re-enable the button after a delay
+                setTimeout(() => {
+                    form.reset();
+                    submitButton.disabled = false;
+                    submitButton.textContent = 'Send Message';
+                }, 4000); // Reset after 4 seconds
 
             } catch (error) {
-                // Handle network errors (e.g., cannot connect to the webhook URL)
-                console.error('Network Error:', error);
-                displayMessage('Could not send the message. Please check your connection.', 'text-red-600');
-            } finally {
-                // --- 4. Reset Loading State ---
-                submitButton.disabled = false;
-                submitButton.textContent = 'Send Message';
+                console.error('Form Submission Error:', error);
+                displayMessage('An unexpected error occurred.', 'text-red-600');
             }
         });
 
