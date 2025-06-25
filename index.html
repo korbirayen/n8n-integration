@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple Contact Form</title>
+    
+    <!-- Tailwind CSS for styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* Apply the Inter font family to the body */
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+
+        /* Custom transition for a smoother focus effect */
+        .form-input {
+            transition: all 0.3s ease-in-out;
+        }
+
+        /* A subtle animation for the success message */
+        @keyframes fadeInOut {
+            0%, 100% { opacity: 0; transform: translateY(10px); }
+            10%, 90% { opacity: 1; transform: translateY(0); }
+        }
+        .fade-in-out {
+            animation: fadeInOut 4s forwards;
+        }
+    </style>
+</head>
+<body class="bg-gray-100">
+
+    <!-- Main Container -->
+    <div class="min-h-screen flex items-center justify-center p-4">
+        
+        <div class="w-full max-w-lg">
+            <!-- The Form Card -->
+            <div class="bg-white rounded-2xl shadow-xl p-8 md:p-12">
+                
+                <!-- Header -->
+                <div class="text-center mb-8">
+                    <h1 class="text-3xl md:text-4xl font-bold text-gray-800">Contact Us</h1>
+                    <p class="text-gray-500 mt-2">We'd love to hear from you!</p>
+                </div>
+
+                <!-- Form -->
+                <form id="contactForm" method="post" action="https://active-specially-thrush.ngrok-free.app/webhook-test/b14800ba-c928-4a58-ac3f-a24ba0d4f44e" novalidate>
+                    <!-- Name Input -->
+                    <div class="mb-6">
+                        <label for="name" class="block text-gray-700 text-sm font-bold mb-2">Name</label>
+                        <input type="text" id="name" name="name" placeholder="Enter your name" class="form-input w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent text-gray-800" required>
+                    </div>
+
+                    <!-- Email Input -->
+                    <div class="mb-6">
+                        <label for="email" class="block text-gray-700 text-sm font-bold mb-2">Email</label>
+                        <input type="email" id="email" name="email" placeholder="you@example.com" class="form-input w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent text-gray-800" required>
+                    </div>
+
+                    <!-- Message Textarea -->
+                    <div class="mb-6">
+                        <label for="message" class="block text-gray-700 text-sm font-bold mb-2">Message</label>
+                        <textarea id="message" name="message" rows="5" placeholder="Your message here..." class="form-input w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent text-gray-800" required></textarea>
+                    </div>
+
+                    <!-- Submit Button -->
+                    <div class="text-center">
+                        <button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-6 rounded-lg focus:outline-none focus:shadow-outline transform transition-transform duration-300 hover:scale-105">
+                            Send Message
+                        </button>
+                    </div>
+                </form>
+
+            </div>
+            
+            <!-- Submission Status Message -->
+            <div id="statusMessage" class="text-center mt-6">
+                <!-- This will be populated by JavaScript -->
+            </div>
+            
+        </div>
+    </div>
+
+    <script>
+        // --- Vanilla JavaScript for Form Handling ---
+
+        // Get the form and the status message elements
+        const form = document.getElementById('contactForm');
+        const statusMessage = document.getElementById('statusMessage');
+
+        // Add a submit event listener to the form
+        form.addEventListener('submit', function(event) {
+            // Prevent the default form submission behavior
+            event.preventDefault();
+
+            // Clear any previous status messages
+            statusMessage.innerHTML = '';
+            
+            // Basic form validation
+            const name = form.elements.name.value.trim();
+            const email = form.elements.email.value.trim();
+            const message = form.elements.message.value.trim();
+
+            if (name === '' || email === '' || message === '') {
+                // Display an error message if fields are empty
+                displayMessage('Please fill out all fields.', 'text-red-600');
+                return; // Stop the function
+            }
+
+            // --- Form submission logic would go here ---
+            // For this example, we'll just simulate a successful submission.
+            // In a real application, you would send the data to a server using fetch().
+            
+            console.log('Form Submitted!');
+            console.log('Name:', name);
+            console.log('Email:', email);
+            console.log('Message:', message);
+            
+            // Display a success message
+            displayMessage('Thank you! Your message has been sent.', 'text-green-600');
+
+            // Reset the form fields after submission
+            form.reset();
+        });
+
+        /**
+         * A helper function to display a status message to the user.
+         * The message automatically fades out after a few seconds.
+         * @param {string} message - The text to display.
+         * @param {string} colorClass - The Tailwind CSS color class (e.g., 'text-green-600').
+         */
+        function displayMessage(message, colorClass) {
+            // Create a paragraph element for the message
+            const messageElement = document.createElement('p');
+            messageElement.textContent = message;
+            
+            // Apply styling classes for appearance and animation
+            messageElement.className = `font-semibold ${colorClass} fade-in-out`;
+
+            // Add the message to the status container
+            statusMessage.appendChild(messageElement);
+
+            // The animation will automatically handle the fade-out,
+            // but we'll remove the element from the DOM after the animation completes.
+            setTimeout(() => {
+                if (statusMessage.contains(messageElement)) {
+                    statusMessage.removeChild(messageElement);
+                }
+            }, 4000); // Corresponds to the animation duration
+        }
+    </script>
+
+</body>
+</html>
