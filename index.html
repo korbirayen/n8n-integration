@@ -50,7 +50,7 @@
                 </div>
 
                 <!-- Form -->
-                <form id="contactForm" method="post" action="https://active-specially-thrush.ngrok-free.app/webhook-test/b14800ba-c928-4a58-ac3f-a24ba0d4f44e" novalidate>
+                <form id="contactForm" novalidate>
                     <!-- Name Input -->
                     <div class="mb-6">
                         <label for="name" class="block text-gray-700 text-sm font-bold mb-2">Name</label>
@@ -71,7 +71,7 @@
 
                     <!-- Submit Button -->
                     <div class="text-center">
-                        <button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-6 rounded-lg focus:outline-none focus:shadow-outline transform transition-transform duration-300 hover:scale-105">
+                        <button type="submit" id="submitButton" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-6 rounded-lg focus:outline-none focus:shadow-outline transform transition-transform duration-300 hover:scale-105 disabled:bg-indigo-400 disabled:cursor-not-allowed">
                             Send Message
                         </button>
                     </div>
@@ -88,71 +88,89 @@
     </div>
 
     <script>
-        // --- Vanilla JavaScript for Form Handling ---
+        // --- Vanilla JavaScript for Form Handling with n8n Webhook ---
 
-        // Get the form and the status message elements
+        // Get the form and other elements
         const form = document.getElementById('contactForm');
         const statusMessage = document.getElementById('statusMessage');
+        const submitButton = document.getElementById('submitButton');
+
+        // The n8n test webhook URL from your image
+        const webhookUrl = 'https://active-specially-thrush.ngrok-free.app/webhook-test/b14800ba-c928-4a58-ac3f-a24ba0d4f44e';
 
         // Add a submit event listener to the form
-        form.addEventListener('submit', function(event) {
+        form.addEventListener('submit', async function(event) {
             // Prevent the default form submission behavior
             event.preventDefault();
 
             // Clear any previous status messages
             statusMessage.innerHTML = '';
             
-            // Basic form validation
+            // --- 1. Form Validation ---
             const name = form.elements.name.value.trim();
             const email = form.elements.email.value.trim();
             const message = form.elements.message.value.trim();
 
             if (name === '' || email === '' || message === '') {
-                // Display an error message if fields are empty
                 displayMessage('Please fill out all fields.', 'text-red-600');
                 return; // Stop the function
             }
 
-            // --- Form submission logic would go here ---
-            // For this example, we'll just simulate a successful submission.
-            // In a real application, you would send the data to a server using fetch().
-            
-            console.log('Form Submitted!');
-            console.log('Name:', name);
-            console.log('Email:', email);
-            console.log('Message:', message);
-            
-            // Display a success message
-            displayMessage('Thank you! Your message has been sent.', 'text-green-600');
+            // --- 2. Show Loading State ---
+            submitButton.disabled = true;
+            submitButton.textContent = 'Sending...';
 
-            // Reset the form fields after submission
-            form.reset();
+            // --- 3. Prepare Data and Send to Webhook ---
+            const formData = {
+                name: name,
+                email: email,
+                message: message
+            };
+
+            try {
+                const response = await fetch(webhookUrl, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(formData),
+                });
+
+                if (response.ok) {
+                    // If the webhook receives the data successfully
+                    displayMessage('Thank you! Your message has been sent.', 'text-green-600');
+                    form.reset(); // Reset the form fields
+                } else {
+                    // Handle server errors (e.g., n8n workflow has an issue)
+                    const errorData = await response.json();
+                    console.error('Server Error:', errorData);
+                    displayMessage('Something went wrong on the server. Please try again.', 'text-red-600');
+                }
+            } catch (error) {
+                // Handle network errors (e.g., cannot connect to the webhook URL)
+                console.error('Network Error:', error);
+                displayMessage('Could not connect. Please check your connection.', 'text-red-600');
+            } finally {
+                // --- 4. Reset Loading State ---
+                submitButton.disabled = false;
+                submitButton.textContent = 'Send Message';
+            }
         });
 
         /**
          * A helper function to display a status message to the user.
-         * The message automatically fades out after a few seconds.
-         * @param {string} message - The text to display.
-         * @param {string} colorClass - The Tailwind CSS color class (e.g., 'text-green-600').
          */
         function displayMessage(message, colorClass) {
-            // Create a paragraph element for the message
             const messageElement = document.createElement('p');
             messageElement.textContent = message;
-            
-            // Apply styling classes for appearance and animation
             messageElement.className = `font-semibold ${colorClass} fade-in-out`;
-
-            // Add the message to the status container
             statusMessage.appendChild(messageElement);
 
-            // The animation will automatically handle the fade-out,
-            // but we'll remove the element from the DOM after the animation completes.
             setTimeout(() => {
                 if (statusMessage.contains(messageElement)) {
                     statusMessage.removeChild(messageElement);
                 }
-            }, 4000); // Corresponds to the animation duration
+            }, 4000);
         }
     </script>
 
