@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Simple Contact Form</title>
+    <title>Chat with n8n AI</title>
     
     <!-- Tailwind CSS for styling -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -14,156 +14,179 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
     
     <style>
-        /* Apply the Inter font family to the body */
+        /* Apply the Inter font family */
         body {
             font-family: 'Inter', sans-serif;
         }
 
-        /* Custom transition for a smoother focus effect */
-        .form-input {
-            transition: all 0.3s ease-in-out;
+        /* Custom scrollbar for a cleaner look */
+        .chat-window::-webkit-scrollbar {
+            width: 6px;
         }
-
-        /* A subtle animation for the success message */
-        @keyframes fadeInOut {
-            0%, 100% { opacity: 0; transform: translateY(10px); }
-            10%, 90% { opacity: 1; transform: translateY(0); }
+        .chat-window::-webkit-scrollbar-track {
+            background: #f1f5f9;
         }
-        .fade-in-out {
-            animation: fadeInOut 4s forwards;
+        .chat-window::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 3px;
+        }
+        .chat-window::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+        
+        /* Animation for the typing indicator dots */
+        @keyframes typing {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-3px); }
+        }
+        .typing-dot {
+            animation: typing 1.2s infinite ease-in-out;
         }
     </style>
 </head>
 <body class="bg-gray-100">
 
-    <!-- Main Container -->
-    <div class="min-h-screen flex items-center justify-center p-4">
+    <!-- Main Chat UI Container -->
+    <div class="h-screen flex items-center justify-center p-4">
         
-        <div class="w-full max-w-lg">
-            <!-- The Form Card -->
-            <div class="bg-white rounded-2xl shadow-xl p-8 md:p-12">
-                
-                <!-- Header -->
-                <div class="text-center mb-8">
-                    <h1 class="text-3xl md:text-4xl font-bold text-gray-800">Contact Us</h1>
-                    <p class="text-gray-500 mt-2">We'd love to hear from you!</p>
+        <div class="w-full max-w-2xl h-full max-h-[700px] flex flex-col bg-white rounded-2xl shadow-2xl">
+            <!-- Header -->
+            <div class="p-4 border-b border-gray-200">
+                <h1 class="text-xl font-bold text-gray-800 text-center">n8n AI Chat</h1>
+            </div>
+
+            <!-- Chat Message Window -->
+            <div id="chat-window" class="flex-1 p-6 space-y-4 overflow-y-auto chat-window">
+                <!-- AI Welcome Message -->
+                <div class="flex items-start gap-3 justify-start">
+                    <div class="w-8 h-8 rounded-full bg-indigo-500 flex items-center justify-center text-white font-bold text-sm">AI</div>
+                    <div class="bg-gray-100 text-gray-800 p-3 rounded-lg max-w-xs md:max-w-md">
+                        <p>Hello! How can I help you today?</p>
+                    </div>
                 </div>
+                <!-- Chat messages will be appended here -->
+            </div>
 
-                <!-- 
-                  The form now has 'action', 'method', and 'target' attributes.
-                  - 'action' points to your webhook URL.
-                  - 'method' is 'POST'.
-                  - 'target' points to the hidden iframe below to prevent page reload.
-                -->
-                <form id="contactForm" 
-                      action="https://active-specially-thrush.ngrok-free.app/webhook-test/b14800ba-c928-4a58-ac3f-a24ba0d4f44e" 
-                      method="POST" 
-                      target="form-submission-iframe" 
-                      novalidate>
-                    <!-- Name Input -->
-                    <div class="mb-6">
-                        <label for="name" class="block text-gray-700 text-sm font-bold mb-2">Name</label>
-                        <input type="text" id="name" name="name" placeholder="Enter your name" class="form-input w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent text-gray-800" required>
-                    </div>
-
-                    <!-- Email Input -->
-                    <div class="mb-6">
-                        <label for="email" class="block text-gray-700 text-sm font-bold mb-2">Email</label>
-                        <input type="email" id="email" name="email" placeholder="you@example.com" class="form-input w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent text-gray-800" required>
-                    </div>
-
-                    <!-- Message Textarea -->
-                    <div class="mb-6">
-                        <label for="message" class="block text-gray-700 text-sm font-bold mb-2">Message</label>
-                        <textarea id="message" name="message" rows="5" placeholder="Your message here..." class="form-input w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent text-gray-800" required></textarea>
-                    </div>
-
-                    <!-- Submit Button -->
-                    <div class="text-center">
-                        <button type="submit" id="submitButton" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-6 rounded-lg focus:outline-none focus:shadow-outline transform transition-transform duration-300 hover:scale-105 disabled:bg-indigo-400 disabled:cursor-not-allowed">
-                            Send Message
-                        </button>
-                    </div>
+            <!-- Message Input Area -->
+            <div class="p-4 border-t border-gray-200 bg-gray-50 rounded-b-2xl">
+                <form id="chat-form" class="flex items-center gap-4">
+                    <input type="text" id="message-input" placeholder="Type your message..." class="flex-1 px-4 py-2 bg-white border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent" autocomplete="off" required>
+                    <button type="submit" id="send-button" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold p-2 rounded-full focus:outline-none focus:shadow-outline flex items-center justify-center w-10 h-10">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+                    </button>
                 </form>
-
             </div>
-            
-            <!-- Submission Status Message -->
-            <div id="statusMessage" class="text-center mt-6">
-                <!-- This will be populated by JavaScript -->
-            </div>
-            
         </div>
     </div>
 
-    <!-- Hidden iframe to handle the form submission without navigating away -->
-    <iframe name="form-submission-iframe" style="display:none;"></iframe>
-
     <script>
-        // --- JavaScript using standard form submission to an iframe ---
+        // --- Chat UI JavaScript ---
 
-        const form = document.getElementById('contactForm');
-        const statusMessage = document.getElementById('statusMessage');
-        const submitButton = document.getElementById('submitButton');
+        const chatWindow = document.getElementById('chat-window');
+        const chatForm = document.getElementById('chat-form');
+        const messageInput = document.getElementById('message-input');
+        const sendButton = document.getElementById('send-button');
+        
+        // IMPORTANT: Use your n8n Production Webhook URL here
+        const webhookUrl = 'https://active-specially-thrush.ngrok-free.app/webhook-test/b14800ba-c928-4a58-ac3f-a24ba0d4f44e';
 
-        form.addEventListener('submit', function(event) {
-            // We prevent the default submission to run our validation and UI updates first.
+        // Listen for form submission
+        chatForm.addEventListener('submit', async function(event) {
             event.preventDefault();
+            const userMessage = messageInput.value.trim();
+            if (!userMessage) return;
 
-            statusMessage.innerHTML = '';
-            
-            // --- 1. Form Validation ---
-            const name = form.elements.name.value.trim();
-            const email = form.elements.email.value.trim();
-            const message = form.elements.message.value.trim();
+            // Add user's message to the UI
+            addMessage(userMessage, 'user');
+            messageInput.value = ''; // Clear the input field
 
-            if (name === '' || email === '' || message === '') {
-                displayMessage('Please fill out all fields.', 'text-red-600');
-                return; // Stop the function if validation fails
-            }
+            // Show a typing indicator for the AI
+            showTypingIndicator();
 
-            // --- 2. Show UI feedback and submit the form ---
             try {
-                // Submit the form programmatically. The browser will now send the data
-                // to the URL in the 'action' attribute, targeted at the hidden iframe.
-                form.submit();
+                // Send the message to the n8n webhook
+                const response = await fetch(webhookUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ message: userMessage }),
+                });
 
-                // Show a success message to the user immediately.
-                displayMessage('Thank you! Your message has been sent.', 'text-green-600');
-                
-                // Disable the button to prevent multiple submissions
-                submitButton.disabled = true;
-                submitButton.textContent = 'Sent!';
+                // Remove the typing indicator once we have a response
+                removeTypingIndicator();
 
-                // Reset the form and re-enable the button after a delay
-                setTimeout(() => {
-                    form.reset();
-                    submitButton.disabled = false;
-                    submitButton.textContent = 'Send Message';
-                }, 4000); // Reset after 4 seconds
+                if (response.ok) {
+                    const aiMessage = await response.text();
+                    addMessage(aiMessage, 'ai');
+                } else {
+                    addMessage('Sorry, there was an error communicating with the AI.', 'ai');
+                }
 
             } catch (error) {
-                console.error('Form Submission Error:', error);
-                displayMessage('An unexpected error occurred.', 'text-red-600');
+                console.error('Fetch Error:', error);
+                removeTypingIndicator();
+                addMessage('Could not connect. Please check the n8n workflow.', 'ai');
             }
         });
 
         /**
-         * A helper function to display a status message to the user.
+         * Adds a message to the chat window.
+         * @param {string} text - The message content.
+         * @param {'user' | 'ai'} sender - Who sent the message.
          */
-        function displayMessage(message, colorClass) {
-            const messageElement = document.createElement('p');
-            messageElement.textContent = message;
-            messageElement.className = `font-semibold ${colorClass} fade-in-out`;
-            statusMessage.appendChild(messageElement);
-
-            setTimeout(() => {
-                if (statusMessage.contains(messageElement)) {
-                    statusMessage.removeChild(messageElement);
-                }
-            }, 4000);
+        function addMessage(text, sender) {
+            let messageElement;
+            if (sender === 'user') {
+                messageElement = `
+                    <div class="flex items-start gap-3 justify-end">
+                        <div class="bg-indigo-600 text-white p-3 rounded-lg max-w-xs md:max-w-md">
+                            <p>${text}</p>
+                        </div>
+                        <div class="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center text-gray-500 font-bold text-sm">You</div>
+                    </div>
+                `;
+            } else {
+                messageElement = `
+                    <div class="flex items-start gap-3 justify-start">
+                        <div class="w-8 h-8 rounded-full bg-indigo-500 flex items-center justify-center text-white font-bold text-sm">AI</div>
+                        <div class="bg-gray-100 text-gray-800 p-3 rounded-lg max-w-xs md:max-w-md">
+                            <p>${text}</p>
+                        </div>
+                    </div>
+                `;
+            }
+            chatWindow.insertAdjacentHTML('beforeend', messageElement);
+            scrollToBottom();
         }
-    </script>
+        
+        /** Shows the AI typing indicator */
+        function showTypingIndicator() {
+            const indicator = `
+                <div id="typing-indicator" class="flex items-start gap-3 justify-start">
+                    <div class="w-8 h-8 rounded-full bg-indigo-500 flex items-center justify-center text-white font-bold text-sm">AI</div>
+                    <div class="bg-gray-100 text-gray-800 p-3 rounded-lg flex items-center gap-1">
+                        <span class="typing-dot w-2 h-2 bg-gray-400 rounded-full" style="animation-delay: 0s;"></span>
+                        <span class="typing-dot w-2 h-2 bg-gray-400 rounded-full" style="animation-delay: 0.2s;"></span>
+                        <span class="typing-dot w-2 h-2 bg-gray-400 rounded-full" style="animation-delay: 0.4s;"></span>
+                    </div>
+                </div>
+            `;
+            chatWindow.insertAdjacentHTML('beforeend', indicator);
+            scrollToBottom();
+        }
+        
+        /** Removes the AI typing indicator */
+        function removeTypingIndicator() {
+            const indicator = document.getElementById('typing-indicator');
+            if (indicator) {
+                indicator.remove();
+            }
+        }
 
+        /** Scrolls the chat window to the latest message */
+        function scrollToBottom() {
+            chatWindow.scrollTop = chatWindow.scrollHeight;
+        }
+
+    </script>
 </body>
 </html>
