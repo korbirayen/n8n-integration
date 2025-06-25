@@ -96,11 +96,6 @@
         chatForm.addEventListener('submit', async function(event) {
             event.preventDefault();
 
-            // Check if the placeholder URL is still there
-            if (webhookUrl === 'https://active-specially-thrush.ngrok-free.app/webhook/b14800ba-c928-4a58-ac3f-a24ba0d4f44e') {
-                addMessage('Please update the `webhookUrl` in the code with your n8n Production URL.', 'ai');
-                return;
-            }
 
             const userMessage = messageInput.value.trim();
             if (!userMessage) return;
