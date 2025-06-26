@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chat with n8n AI</title>
+    <title>Ojital AI Chat</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
     
@@ -11,72 +11,94 @@
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700&display=swap" rel="stylesheet">
     
     <style>
-        /* Apply the Inter font family */
+        /* --- CORE STYLES TO MATCH OJITAL.TECH --- */
+
         body {
-            font-family: 'Inter', sans-serif;
+            font-family: 'Sora', sans-serif;
+            background-color: #0F1115;
+            overflow: hidden;
         }
 
-        /* Custom scrollbar for a cleaner look */
-        .chat-window::-webkit-scrollbar {
-            width: 6px;
-        }
-        .chat-window::-webkit-scrollbar-track {
-            background: #f1f5f9;
-        }
-        .chat-window::-webkit-scrollbar-thumb {
-            background: #cbd5e1;
-            border-radius: 3px;
-        }
-        .chat-window::-webkit-scrollbar-thumb:hover {
-            background: #94a3b8;
+        body::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAMAAAAp4XiDAAAAUVBMVEWFhYWDg4N3d3dtbW17e3t1dXWBgYGHh4d5eXlzc3OLi4ubm5uVlZWPj4+NjY19fX2JiYl/f39tbW1+fn5oaGhxcXFra2tpaPHz8/P39/fHx8fExMSvr69mZmdQAAAAyElEQVR42pyO2w6DIBAF3fH/d2NPDs7MCeFck2bSAlgn8Ld+3N45Xo3B3wPzy4cByv4P89Qf6V8s7c34P1fS8/eK8k3s7yP5fM3s3wXi7O3hC2P5P4/s/4G8P2N+x+P7G/T8Dfx/bfwP/P9p/B/8/2P8P/P9j/A/8/2P8D/z/w/z/Y/wP/P/D/A/8/0P8D/z/Q/wP/P9D/A/8/0P8D/z/Q/wP/P9j/A/8/2P8P/z/Y/wP/P9j/A/8/2P8D/z/Y/wP/P9j/A/8/2P8D/z/Y/wP/P9j/A/8/2P8D/z/w/y/Y/wP/P/D/A/8/0P8D/z/Q/wP/P9D/A/8/0P8D/z/Q/wP/P9D/A/8/0P8D/z/Q/wP/P9j/A/8/2P8D/z/Y/wP/P9j/A/8/2P8D/z/Y/wP/P9j/A/8/2P8D/z/Y/wP/P9j/A/w/A/4fwfw/wP+B/D/B/g/wf8P+B/D/B/g/wf8P+B/D/B/g/wf8P+B/D/B/g/wf8P+B/D/B/g/wf8P+H8H8B8J9H8P8H8H8H8H8H8I8J9H8P8H8I8F+R/gfw/w/z/Y/wP/P9D/A/8/0P8D/z/Q/wP/P9D/A/8/0P8D/z/Q/wP/P9D/A/8/0P8D/z/Y/wP/P9j/A/8/2P8D/z/Y/wP/P9j/A/8/2P8D/z/Y/wP/P9j/A/8/2P8D/z/Y/wP/P9j/A/8/2P8D/z/Y/wP/P9j/A/8/wP+B/A/Av4H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8H8Hax-');
+            opacity: 0.1;
+            z-index: -1;
         }
         
-        /* Animation for the typing indicator dots */
-        @keyframes typing {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-3px); }
+        .aurora-container { position: relative; isolation: isolate; overflow: hidden; }
+        .aurora-container::after, .aurora-container::before { content: ''; position: absolute; z-index: -1; border-radius: 50%; filter: blur(100px); }
+        .aurora-container::before { width: 400px; height: 400px; background: radial-gradient(circle, rgba(124, 58, 237, 0.3) 0%, rgba(124, 58, 237, 0) 70%); top: -100px; left: -150px; }
+        .aurora-container::after { width: 350px; height: 350px; background: radial-gradient(circle, rgba(34, 211, 238, 0.2) 0%, rgba(34, 211, 238, 0) 70%); bottom: -100px; right: -100px; }
+
+        .glass-panel {
+            background-color: rgba(21, 24, 38, 0.6);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(100, 116, 139, 0.3);
         }
-        .typing-dot {
-            animation: typing 1.2s infinite ease-in-out;
+        
+        .chat-window::-webkit-scrollbar { width: 8px; }
+        .chat-window::-webkit-scrollbar-track { background: transparent; }
+        .chat-window::-webkit-scrollbar-thumb { background: rgba(100, 116, 139, 0.5); border-radius: 4px; }
+        .chat-window::-webkit-scrollbar-thumb:hover { background: rgba(100, 116, 139, 0.7); }
+
+        .chat-message-ai { color: #d1d5db; }
+        .chat-message-ai ul, .chat-message-ai ol { margin: 0.5rem 0; padding-left: 1.25rem; }
+        .chat-message-ai strong { color: #ffffff; font-weight: 600; }
+        .chat-message-ai a { color: #a78bfa; text-decoration: underline; }
+        .chat-message-ai p:not(:last-child) { margin-bottom: 0.75rem; }
+        
+        /* --- NEW ANIMATIONS --- */
+        @keyframes fade-in-scale-up {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+        @keyframes slide-in-from-bottom {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
-        /* Basic styling for rendered markdown elements */
-        .chat-message-ai ul, .chat-message-ai ol {
-            list-style-position: inside;
-            padding-left: 1rem;
+        .animate-on-load {
+            animation: fade-in-scale-up 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
         }
-        .chat-message-ai ul { list-style-type: disc; }
-        .chat-message-ai ol { list-style-type: decimal; }
-        .chat-message-ai p { margin-bottom: 0.5rem; }
-        .chat-message-ai p:last-child { margin-bottom: 0; }
+
+        .animate-new-message {
+            animation: slide-in-from-bottom 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+        }
     </style>
 </head>
-<body class="bg-gray-100">
+<body class="bg-slate-900">
 
-    <div class="h-screen flex items-center justify-center p-4">
+    <div class="h-screen w-screen flex items-center justify-center p-4 aurora-container">
         
-        <div class="w-full max-w-2xl h-full max-h-[700px] flex flex-col bg-white rounded-2xl shadow-2xl">
-            <div class="p-4 border-b border-gray-200">
-                <h1 class="text-xl font-bold text-gray-800 text-center">n8n AI Chat</h1>
+        <div class="w-full max-w-2xl h-full max-h-[700px] flex flex-col glass-panel rounded-2xl shadow-2xl shadow-black/30 animate-on-load">
+            <div class="p-4 border-b border-slate-700/50">
+                <h1 class="text-xl font-bold text-white text-center">Ojital AI Agent</h1>
             </div>
 
-            <div id="chat-window" class="flex-1 p-6 space-y-4 overflow-y-auto chat-window">
-                <div class="flex items-start gap-3 justify-start">
-                    <div class="w-8 h-8 rounded-full bg-indigo-500 flex items-center justify-center text-white font-bold text-sm">AI</div>
-                    <div class="bg-gray-100 text-gray-800 p-3 rounded-lg max-w-xs md:max-w-md">
-                        <p>Hello! How can I help you today?</p>
+            <div id="chat-window" class="flex-1 p-6 space-y-6 overflow-y-auto chat-window">
+                <div class="flex items-start gap-4 justify-start animate-new-message">
+                    <div class="w-9 h-9 rounded-full bg-gradient-to-br from-purple-500 to-violet-600 flex items-center justify-center text-white font-bold text-base flex-shrink-0 shadow-md shadow-black/20">AI</div>
+                    <div class="bg-slate-700/80 text-gray-200 p-3 rounded-xl max-w-xs md:max-w-md chat-message-ai">
+                        <p>Hello! I am your Ojital AI Agent. How can I assist you today?</p>
                     </div>
                 </div>
-                </div>
+            </div>
 
-            <div class="p-4 border-t border-gray-200 bg-gray-50 rounded-b-2xl">
+            <div class="p-4 border-t border-slate-700/50">
                 <form id="chat-form" class="flex items-center gap-4">
-                    <input type="text" id="message-input" placeholder="Type your message..." class="flex-1 px-4 py-2 bg-white border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent" autocomplete="off" required>
-                    <button type="submit" id="send-button" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold p-2 rounded-full focus:outline-none focus:shadow-outline flex items-center justify-center w-10 h-10">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+                    <input type="text" id="message-input" placeholder="Automate a task..." class="flex-1 px-4 py-2.5 bg-slate-900/70 text-white border border-slate-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-transparent placeholder-gray-500 transition-all duration-300" autocomplete="off" required>
+                    <button type="submit" id="send-button" class="bg-gradient-to-r from-purple-500 to-violet-600 text-white font-bold p-2.5 rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-slate-800 focus:ring-violet-500 flex items-center justify-center w-10 h-10 flex-shrink-0 transition-all duration-200 hover:opacity-90 active:scale-95">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
                     </button>
                 </form>
             </div>
@@ -84,119 +106,83 @@
     </div>
 
     <script>
-        // --- Chat UI JavaScript ---
-
         const chatWindow = document.getElementById('chat-window');
         const chatForm = document.getElementById('chat-form');
         const messageInput = document.getElementById('message-input');
-        const sendButton = document.getElementById('send-button');
-        
-        // --- CRITICAL FIX ---
-        // The ngrok "Test URL" expires. You MUST use the "Production URL" from your
-        // ACTIVE n8n webhook node for the chat to work reliably.
         const webhookUrl = 'https://active-specially-thrush.ngrok-free.app/webhook/b14800ba-c928-4a58-ac3f-a24ba0d4f44e';
 
-        // Listen for form submission
         chatForm.addEventListener('submit', async function(event) {
             event.preventDefault();
-
-
             const userMessage = messageInput.value.trim();
             if (!userMessage) return;
-
-            // Add user's message to the UI
             addMessage(userMessage, 'user');
-            messageInput.value = ''; // Clear the input field
-
-            // Show a typing indicator for the AI
+            messageInput.value = '';
             showTypingIndicator();
-
             try {
-                // Send the message to the n8n webhook
                 const response = await fetch(webhookUrl, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ message: userMessage }),
                 });
-
-                // Remove the typing indicator once we have a response
                 removeTypingIndicator();
-
                 if (response.ok) {
-                    const aiMessage = await response.text();
-                    addMessage(aiMessage, 'ai');
+                    addMessage(await response.text(), 'ai');
                 } else {
-                    addMessage('Sorry, there was an error communicating with the AI.', 'ai');
+                    addMessage('An error occurred. Please try again.', 'ai');
                 }
-
             } catch (error) {
-                console.error('Fetch Error:', error);
                 removeTypingIndicator();
-                addMessage('Could not connect. Please check the n8n workflow.', 'ai');
+                addMessage('Connection failed. Please check the backend.', 'ai');
             }
         });
 
-        /**
-         * Adds a message to the chat window.
-         * @param {string} text - The message content.
-         * @param {'user' | 'ai'} sender - Who sent the message.
-         */
         function addMessage(text, sender) {
             let messageElement;
             if (sender === 'user') {
+                const escapedText = text.replace(/</g, "&lt;").replace(/>/g, "&gt;");
                 messageElement = `
-                    <div class="flex items-start gap-3 justify-end">
-                        <div class="bg-indigo-600 text-white p-3 rounded-lg max-w-xs md:max-w-md">
-                            <p>${text}</p>
+                    <div class="flex items-start gap-4 justify-end animate-new-message">
+                        <div class="bg-gradient-to-br from-purple-500 to-violet-600 text-white p-3 rounded-xl max-w-xs md:max-w-md shadow-lg shadow-black/25">
+                            <p>${escapedText}</p>
                         </div>
-                        <div class="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center text-gray-500 font-bold text-sm">You</div>
-                    </div>
-                `;
+                        <div class="w-9 h-9 rounded-full bg-slate-600 flex items-center justify-center text-gray-300 font-semibold text-sm flex-shrink-0">You</div>
+                    </div>`;
             } else {
-                // NECESSARY CHANGE: Parse markdown from AI response to HTML
                 const formattedText = marked.parse(text);
                 messageElement = `
-                    <div class="flex items-start gap-3 justify-start">
-                        <div class="w-8 h-8 rounded-full bg-indigo-500 flex items-center justify-center text-white font-bold text-sm">AI</div>
-                        <div class="bg-gray-100 text-gray-800 p-3 rounded-lg max-w-xs md:max-w-md chat-message-ai">
+                    <div class="flex items-start gap-4 justify-start animate-new-message">
+                        <div class="w-9 h-9 rounded-full bg-gradient-to-br from-purple-500 to-violet-600 flex items-center justify-center text-white font-bold text-base flex-shrink-0 shadow-md shadow-black/20">AI</div>
+                        <div class="bg-slate-700/80 p-3 rounded-xl max-w-xs md:max-w-md chat-message-ai">
                             ${formattedText}
                         </div>
-                    </div>
-                `;
+                    </div>`;
             }
             chatWindow.insertAdjacentHTML('beforeend', messageElement);
             scrollToBottom();
         }
         
-        /** Shows the AI typing indicator */
         function showTypingIndicator() {
             const indicator = `
-                <div id="typing-indicator" class="flex items-start gap-3 justify-start">
-                    <div class="w-8 h-8 rounded-full bg-indigo-500 flex items-center justify-center text-white font-bold text-sm">AI</div>
-                    <div class="bg-gray-100 text-gray-800 p-3 rounded-lg flex items-center gap-1">
-                        <span class="typing-dot w-2 h-2 bg-gray-400 rounded-full" style="animation-delay: 0s;"></span>
-                        <span class="typing-dot w-2 h-2 bg-gray-400 rounded-full" style="animation-delay: 0.2s;"></span>
-                        <span class="typing-dot w-2 h-2 bg-gray-400 rounded-full" style="animation-delay: 0.4s;"></span>
+                <div id="typing-indicator" class="flex items-start gap-4 justify-start animate-new-message">
+                    <div class="w-9 h-9 rounded-full bg-gradient-to-br from-purple-500 to-violet-600 flex items-center justify-center text-white font-bold text-base flex-shrink-0 shadow-md shadow-black/20">AI</div>
+                    <div class="bg-slate-700/80 rounded-xl p-3 flex items-center gap-2">
+                        <span class="block w-2 h-2 bg-gray-400 rounded-full" style="animation: typing 1.2s infinite ease-in-out 0s;"></span>
+                        <span class="block w-2 h-2 bg-gray-400 rounded-full" style="animation: typing 1.2s infinite ease-in-out 0.2s;"></span>
+                        <span class="block w-2 h-2 bg-gray-400 rounded-full" style="animation: typing 1.2s infinite ease-in-out 0.4s;"></span>
                     </div>
-                </div>
-            `;
+                </div>`;
             chatWindow.insertAdjacentHTML('beforeend', indicator);
             scrollToBottom();
         }
         
-        /** Removes the AI typing indicator */
         function removeTypingIndicator() {
             const indicator = document.getElementById('typing-indicator');
-            if (indicator) {
-                indicator.remove();
-            }
+            if (indicator) indicator.remove();
         }
 
-        /** Scrolls the chat window to the latest message */
         function scrollToBottom() {
             chatWindow.scrollTop = chatWindow.scrollHeight;
         }
-
     </script>
 </body>
 </html>
