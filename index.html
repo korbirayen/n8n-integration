@@ -5,10 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Chat with n8n AI</title>
     
-    <!-- Tailwind CSS for styling -->
     <script src="https://cdn.tailwindcss.com"></script>
     
-    <!-- Google Fonts: Inter -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
@@ -42,32 +42,36 @@
         .typing-dot {
             animation: typing 1.2s infinite ease-in-out;
         }
+
+        /* Basic styling for rendered markdown elements */
+        .chat-message-ai ul, .chat-message-ai ol {
+            list-style-position: inside;
+            padding-left: 1rem;
+        }
+        .chat-message-ai ul { list-style-type: disc; }
+        .chat-message-ai ol { list-style-type: decimal; }
+        .chat-message-ai p { margin-bottom: 0.5rem; }
+        .chat-message-ai p:last-child { margin-bottom: 0; }
     </style>
 </head>
 <body class="bg-gray-100">
 
-    <!-- Main Chat UI Container -->
     <div class="h-screen flex items-center justify-center p-4">
         
         <div class="w-full max-w-2xl h-full max-h-[700px] flex flex-col bg-white rounded-2xl shadow-2xl">
-            <!-- Header -->
             <div class="p-4 border-b border-gray-200">
                 <h1 class="text-xl font-bold text-gray-800 text-center">n8n AI Chat</h1>
             </div>
 
-            <!-- Chat Message Window -->
             <div id="chat-window" class="flex-1 p-6 space-y-4 overflow-y-auto chat-window">
-                <!-- AI Welcome Message -->
                 <div class="flex items-start gap-3 justify-start">
                     <div class="w-8 h-8 rounded-full bg-indigo-500 flex items-center justify-center text-white font-bold text-sm">AI</div>
                     <div class="bg-gray-100 text-gray-800 p-3 rounded-lg max-w-xs md:max-w-md">
                         <p>Hello! How can I help you today?</p>
                     </div>
                 </div>
-                <!-- Chat messages will be appended here -->
-            </div>
+                </div>
 
-            <!-- Message Input Area -->
             <div class="p-4 border-t border-gray-200 bg-gray-50 rounded-b-2xl">
                 <form id="chat-form" class="flex items-center gap-4">
                     <input type="text" id="message-input" placeholder="Type your message..." class="flex-1 px-4 py-2 bg-white border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent" autocomplete="off" required>
@@ -149,11 +153,13 @@
                     </div>
                 `;
             } else {
+                // NECESSARY CHANGE: Parse markdown from AI response to HTML
+                const formattedText = marked.parse(text);
                 messageElement = `
                     <div class="flex items-start gap-3 justify-start">
                         <div class="w-8 h-8 rounded-full bg-indigo-500 flex items-center justify-center text-white font-bold text-sm">AI</div>
-                        <div class="bg-gray-100 text-gray-800 p-3 rounded-lg max-w-xs md:max-w-md">
-                            <p>${text}</p>
+                        <div class="bg-gray-100 text-gray-800 p-3 rounded-lg max-w-xs md:max-w-md chat-message-ai">
+                            ${formattedText}
                         </div>
                     </div>
                 `;
