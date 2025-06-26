@@ -8,8 +8,8 @@
     <!-- Tailwind CSS for styling -->
     <script src="https://cdn.tailwindcss.com"></script>
     
-    <!-- markdown-it.js library for Markdown to HTML conversion -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/markdown-it/14.1.0/markdown-it.min.js"></script>
+    <!-- Marked.js library for Markdown to HTML conversion -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     
     <!-- Google Fonts: Inter -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -58,9 +58,6 @@
         }
         .ai-message-content strong {
             font-weight: 600;
-        }
-        .ai-message-content p:last-child {
-            margin-bottom: 0;
         }
     </style>
 </head>
@@ -111,9 +108,6 @@
         // --- CRITICAL FIX ---
         // You MUST use the "Production URL" from your ACTIVE n8n webhook node.
         const webhookUrl = 'YOUR_N8N_PRODUCTION_URL_GOES_HERE';
-
-        // Initialize markdown-it
-        const md = window.markdownit();
 
         // Listen for form submission
         chatForm.addEventListener('submit', async function(event) {
@@ -172,8 +166,8 @@
                     <div class="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center text-gray-500 font-bold text-sm">You</div>
                 `;
             } else {
-                // For AI messages, parse the text as Markdown using markdown-it
-                const parsedHtml = md.render(text);
+                // For AI messages, parse the text as Markdown
+                const parsedHtml = marked.parse(text);
                 outerDiv.className = "flex items-start gap-3 justify-start";
                 messageHTML = `
                     <div class="w-8 h-8 rounded-full bg-indigo-500 flex items-center justify-center text-white font-bold text-sm">AI</div>
