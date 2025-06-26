@@ -8,9 +8,6 @@
     <!-- Tailwind CSS for styling -->
     <script src="https://cdn.tailwindcss.com"></script>
     
-    <!-- Marked.js library for Markdown to HTML conversion -->
-    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-    
     <!-- Google Fonts: Inter -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -45,20 +42,6 @@
         .typing-dot {
             animation: typing 1.2s infinite ease-in-out;
         }
-
-        /* Basic styling for content generated from Markdown */
-        .ai-message-content ul {
-            list-style-type: disc;
-            padding-left: 1.5rem;
-            margin-top: 0.5rem;
-            margin-bottom: 0.5rem;
-        }
-        .ai-message-content li {
-            margin-bottom: 0.25rem;
-        }
-        .ai-message-content strong {
-            font-weight: 600;
-        }
     </style>
 </head>
 <body class="bg-gray-100">
@@ -78,9 +61,7 @@
                 <div class="flex items-start gap-3 justify-start">
                     <div class="w-8 h-8 rounded-full bg-indigo-500 flex items-center justify-center text-white font-bold text-sm">AI</div>
                     <div class="bg-gray-100 text-gray-800 p-3 rounded-lg max-w-xs md:max-w-md">
-                        <div class="ai-message-content">
-                            <p>Hello! How can I help you today?</p>
-                        </div>
+                        <p>Hello! How can I help you today?</p>
                     </div>
                 </div>
                 <!-- Chat messages will be appended here -->
@@ -104,34 +85,37 @@
         const chatWindow = document.getElementById('chat-window');
         const chatForm = document.getElementById('chat-form');
         const messageInput = document.getElementById('message-input');
+        const sendButton = document.getElementById('send-button');
         
         // --- CRITICAL FIX ---
-        // You MUST use the "Production URL" from your ACTIVE n8n webhook node.
-        const webhookUrl = 'YOUR_N8N_PRODUCTION_URL_GOES_HERE';
+        // The ngrok "Test URL" expires. You MUST use the "Production URL" from your
+        // ACTIVE n8n webhook node for the chat to work reliably.
+        const webhookUrl = 'https://active-specially-thrush.ngrok-free.app/webhook/b14800ba-c928-4a58-ac3f-a24ba0d4f44e';
 
         // Listen for form submission
         chatForm.addEventListener('submit', async function(event) {
             event.preventDefault();
 
-            if (webhookUrl === 'YOUR_N8N_PRODUCTION_URL_GOES_HERE') {
-                addMessage('Please update the `webhookUrl` in the code with your n8n Production URL.', 'ai');
-                return;
-            }
 
             const userMessage = messageInput.value.trim();
             if (!userMessage) return;
 
+            // Add user's message to the UI
             addMessage(userMessage, 'user');
-            messageInput.value = ''; 
+            messageInput.value = ''; // Clear the input field
+
+            // Show a typing indicator for the AI
             showTypingIndicator();
 
             try {
+                // Send the message to the n8n webhook
                 const response = await fetch(webhookUrl, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ message: userMessage }),
                 });
-                
+
+                // Remove the typing indicator once we have a response
                 removeTypingIndicator();
 
                 if (response.ok) {
@@ -149,36 +133,32 @@
         });
 
         /**
-         * Adds a message to the chat window, parsing Markdown for AI messages.
+         * Adds a message to the chat window.
          * @param {string} text - The message content.
          * @param {'user' | 'ai'} sender - Who sent the message.
          */
         function addMessage(text, sender) {
-            const outerDiv = document.createElement('div');
-            let messageHTML;
-
+            let messageElement;
             if (sender === 'user') {
-                outerDiv.className = "flex items-start gap-3 justify-end";
-                messageHTML = `
-                    <div class="bg-indigo-600 text-white p-3 rounded-lg max-w-xs md:max-w-md">
-                        <p>${text}</p>
+                messageElement = `
+                    <div class="flex items-start gap-3 justify-end">
+                        <div class="bg-indigo-600 text-white p-3 rounded-lg max-w-xs md:max-w-md">
+                            <p>${text}</p>
+                        </div>
+                        <div class="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center text-gray-500 font-bold text-sm">You</div>
                     </div>
-                    <div class="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center text-gray-500 font-bold text-sm">You</div>
                 `;
             } else {
-                // For AI messages, parse the text as Markdown
-                const parsedHtml = marked.parse(text);
-                outerDiv.className = "flex items-start gap-3 justify-start";
-                messageHTML = `
-                    <div class="w-8 h-8 rounded-full bg-indigo-500 flex items-center justify-center text-white font-bold text-sm">AI</div>
-                    <div class="bg-gray-100 text-gray-800 p-3 rounded-lg max-w-xs md:max-w-md">
-                        <div class="ai-message-content">${parsedHtml}</div>
+                messageElement = `
+                    <div class="flex items-start gap-3 justify-start">
+                        <div class="w-8 h-8 rounded-full bg-indigo-500 flex items-center justify-center text-white font-bold text-sm">AI</div>
+                        <div class="bg-gray-100 text-gray-800 p-3 rounded-lg max-w-xs md:max-w-md">
+                            <p>${text}</p>
+                        </div>
                     </div>
                 `;
             }
-
-            outerDiv.innerHTML = messageHTML;
-            chatWindow.appendChild(outerDiv);
+            chatWindow.insertAdjacentHTML('beforeend', messageElement);
             scrollToBottom();
         }
         
